@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Ana Pencere</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="pbFaturaGiris">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>171</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Alış Faturası</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbOdemeGiris">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>171</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Satış Faturası</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbHesapEkstre">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>171</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Hesap Ekstresi</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbCariListesi">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>160</y>
+      <width>171</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Firma Girişi</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbCariListesi_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>210</y>
+      <width>171</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cari Listesi</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbCekKayit">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>260</y>
+      <width>171</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Çek Kayıt</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbGelenOdeme">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>310</y>
+      <width>171</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Gelen Ödeme</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="twOdemeListesi">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>40</y>
+      <width>580</width>
+      <height>170</height>
+     </rect>
+    </property>
+    <column>
+     <property name="text">
+      <string>Firma Adı</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Ödeme Tutarı</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QTableWidget" name="twCekListesi">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>460</y>
+      <width>580</width>
+      <height>170</height>
+     </rect>
+    </property>
+    <column>
+     <property name="text">
+      <string>Firma Adı</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Çek No</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Çek Tarihi</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Vade Tarihi</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Ödeme Tutarı</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>640</y>
+      <width>120</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Çek Ödemesi</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbYapilanOdeme">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>360</y>
+      <width>171</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Yapılan Ödeme</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="twGelecekOdeme">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>250</y>
+      <width>580</width>
+      <height>170</height>
+     </rect>
+    </property>
+    <column>
+     <property name="text">
+      <string>Firma Adı</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Ödeme Tutarı</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>10</y>
+      <width>580</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Yapılacak Ödemeler Listesi</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>220</y>
+      <width>580</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Gelecek Ödemeler Listesi</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>430</y>
+      <width>580</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ÇekListesi</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbKayitDuzenle">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>410</y>
+      <width>171</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Kayıt Düzenle</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
