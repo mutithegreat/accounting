@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>kayitDuzenle</class>
+ <widget class="QWidget" name="kayitDuzenle">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Kayıt Düzenle</string>
+  </property>
+  <widget class="QComboBox" name="cbFirmaAdi">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>30</y>
+     <width>231</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pbKayitGoster">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>30</y>
+     <width>100</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Kayıtlar Göster</string>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="twAyrintilar">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>100</y>
+     <width>531</width>
+     <height>441</height>
+    </rect>
+   </property>
+   <column>
+    <property name="text">
+     <string>#id</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>İşlem Tipi</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Tarih</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Tutar</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Açıklama</string>
+    </property>
+   </column>
+  </widget>
+  <widget class="QPushButton" name="pbDuzenle">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>570</y>
+     <width>180</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Seçili Kaydı Düzenle</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pbSil">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>570</y>
+     <width>180</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Seçili Kaydı Sil</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
