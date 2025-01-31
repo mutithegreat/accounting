@@ -2,7 +2,7 @@ import sqlite3
 from PyQt5.QtWidgets import *
 from loginPageUi import Ui_Form
 from mainWindow import MainWindow
-
+from passlib.hash import sha256_crypt
 
 class Login(QWidget):
     def __init__(self):
@@ -15,17 +15,16 @@ class Login(QWidget):
 
     def giris(self):
         
-        kadi = self.loginForm.lineEdit.text()
+        k_adi = self.loginForm.lineEdit.text()
         sifre = self.loginForm.lineEdit_2.text()
         self.con = sqlite3.connect("database.db")
         self.cursor = self.con.cursor()
-        self.cursor.execute("select * from login where kullanici_adi = ? and kullanici_sifre = ?",(kadi,sifre))
-        data = self.cursor.fetchall()
-        
-        
-        if len(data) > 0:
-            if data[0][0] == kadi and data[0][1] == sifre:
-                    
-                self.hide()
-                self.mainPageOpen.show()
+        self.cursor.execute("select * from login where kullanici_adi = ?",(k_adi,))
+        result = self.cursor.fetchall()
+        if len(result) > 0:
+            
+            if result[0][0] == k_adi:
+                if sha256_crypt.verify(sifre,result[0][1]):
+                    self.hide()
+                    self.mainPageOpen.show()
             
