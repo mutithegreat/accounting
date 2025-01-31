@@ -21,10 +21,9 @@ class Login(QWidget):
         self.cursor = self.con.cursor()
         self.cursor.execute("select * from login where kullanici_adi = ?",(k_adi,))
         result = self.cursor.fetchall()
-        if len(result) > 0:
+        if result:
             
-            if result[0][0] == k_adi:
-                if sha256_crypt.verify(sifre,result[0][1]):
-                    self.hide()
-                    self.mainPageOpen.show()
+            if result[0][0] == k_adi and sha256_crypt.verify(sifre,result[0][1]):
+                self.hide()
+                self.mainPageOpen.show()
             
