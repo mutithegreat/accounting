@@ -12,9 +12,9 @@ class AlisFaturasi(QWidget):
         self.cursor = self.con.cursor()
         self.cursor.execute("SELECT firma_adi FROM cari_kart")
         firmalar = self.cursor.fetchall()
-        firma_listesi = [" "]
-        for i in firmalar:
-            firma_listesi.append(i[0])
+        firma_listesi = [i[0] for i in firmalar]
+        # for i in firmalar:
+        #     firma_listesi.append(i[0])
         self.con.close()
         self.alisFatura.comboBox.addItems(sorted(firma_listesi))
         self.alisFatura.pushButton_2.clicked.connect(self.hesapla)
