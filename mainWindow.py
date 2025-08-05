@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import *
+from PyQt5.QtCore import QDate,pyqtSignal,QObject
 from cariListesi import CariListesi
 from firmalistesi import FirmaListesi
 from alisFaturasi import AlisFaturasi
@@ -25,6 +26,8 @@ class MainWindow(QMainWindow):
         self.yapilanOdemeGirisEkran = YapilanOdemeGiris()
         self.hesapEkstreEkran = HesapEkstre()
         self.kayitDuzenleEkran = KayitDuzenle()
+        self.alisFaturasıEkran.data_updated.connect(self.update_data)
+        
         self.mainPageform.twCekListesi.setColumnWidth(0,210)
         self.mainPageform.twCekListesi.setColumnWidth(1,80)
         self.mainPageform.twCekListesi.setColumnWidth(2,80)
@@ -36,7 +39,7 @@ class MainWindow(QMainWindow):
         self.mainPageform.twGelecekOdeme.setColumnWidth(1,130)
         self.con = sqlite3.connect("database.db")
         self.cursor = self.con.cursor()
-        
+        """
         #Yaklaşan Gelecek Ödemeler Bilgi Ekranı
         self.cursor.execute('select ftCariAdi, sum(ftToplam) from data where ftTip = "sf" group by ftCariAdi')
         satisFatura  = self.cursor.fetchall()
@@ -136,7 +139,7 @@ class MainWindow(QMainWindow):
         self.mainPageform.pushButton.clicked.connect(self.cekSil)
         self.mainPageform.pbYapilanOdeme.clicked.connect(self.YapilanOdemeEkrani)
         self.mainPageform.pbHesapEkstre.clicked.connect(self.HesapEkstreEkrani)
-        self.mainPageform.pbKayitDuzenle.clicked.connect(self.kayitDuzenle)
+        self.mainPageform.pbKayitDuzenle.clicked.connect(self.kayitDuzenle)"""
     def cariPencere(self):
         self.carliListesiEkran.show()
     def firmalar(self):
@@ -175,7 +178,10 @@ class MainWindow(QMainWindow):
             self.cursor.execute("update cek set durum = ? where cekNo = ?",("0",cekNumarasi))
             self.con.commit()
             self.con.close()
-
+    def update_data(self):
+        self.mainPageform.twCekListesi.update()
+        self.mainPageform.twGelecekOdeme.update()
+        self.mainPageform.twOdemeListesi.update()
             
         
           
