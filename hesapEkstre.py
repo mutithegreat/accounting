@@ -13,7 +13,7 @@ class HesapEkstre(QWidget):
         self.hesapEkstresi.setupUi(self)
         self.con = sqlite3.connect("database.db")
         self.cursor = self.con.cursor()
-        self.cursor.execute("SELECT firma_adi FROM cari_kart")
+        self.cursor.execute("SELECT cari FROM cari_kart")
         firmalar = self.cursor.fetchall()
         self.con.close()
         firma_listesi = [" "]

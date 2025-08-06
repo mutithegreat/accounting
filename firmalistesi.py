@@ -11,7 +11,7 @@ class FirmaListesi(QWidget):
         self.cariListesi = CariListesi()
         self.con = sqlite3.connect("database.db")
         self.cursor = self.con.cursor()
-        self.cursor.execute("SELECT firma_adi FROM cari_kart")
+        self.cursor.execute("SELECT cari FROM cari_kart")
         firmalar = self.cursor.fetchall()
         firma_listesi = list()
         for i in firmalar:
@@ -34,12 +34,12 @@ class FirmaListesi(QWidget):
         buttonPressed = (i.text())
         if buttonPressed == "&Yes":
             firmaAdi = self.firmaListesi.listWidget.currentItem().text()
-            self.cursor.execute("delete from cari_kart where firma_adi = ?" , (firmaAdi,))
+            self.cursor.execute("delete from cari_kart where cari = ?" , (firmaAdi,))
             self.con.commit()
             self.firmaListesi.listWidget.clear()
             self.con = sqlite3.connect("database.db")
             self.cursor = self.con.cursor()
-            self.cursor.execute("SELECT firma_adi FROM cari_kart")
+            self.cursor.execute("SELECT cari FROM cari_kart")
             firmalar = self.cursor.fetchall()
             firma_listesi = list()
             
@@ -51,7 +51,7 @@ class FirmaListesi(QWidget):
     def firma_duzenle(self):
         firmaAdi = self.firmaListesi.listWidget.currentItem().text()
         self.cariListesi.show()
-        self.cursor.execute("SELECT * FROM cari_kart where firma_adi = ?" , (firmaAdi,))
+        self.cursor.execute("SELECT * FROM cari_kart where cari = ?" , (firmaAdi,))
         data = self.cursor.fetchall()
         self.cariListesi.cariListesi.lineEdit.setText(data[0][0])
         self.cariListesi.cariListesi.textEdit.setText(data[0][1])
@@ -60,6 +60,6 @@ class FirmaListesi(QWidget):
         self.cariListesi.cariListesi.lineEdit_4.setText(str(data[0][4]))
         self.cariListesi.cariListesi.lineEdit_5.setText(str(data[0][5]))
         
-        self.cursor.execute("delete from cari_kart where firma_adi = ?",(firmaAdi,))
+        self.cursor.execute("delete from cari_kart where cari = ?",(firmaAdi,))
         self.con.commit()
     

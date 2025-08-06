@@ -23,7 +23,7 @@ class KayitDuzenle(QWidget):
         self.kayitDuzenle.twAyrintilar.setColumnWidth(4,240)
         self.con = sqlite3.connect("database.db")
         self.cursor = self.con.cursor()
-        self.cursor.execute("SELECT firma_adi FROM cari_kart")
+        self.cursor.execute("SELECT cari FROM cari_kart")
         firmalar = self.cursor.fetchall()
         firma_listesi = [" "]
         for i in firmalar:
