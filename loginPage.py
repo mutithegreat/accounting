@@ -2,7 +2,7 @@ import sqlite3
 from PyQt5.QtWidgets import *
 from loginPageUi import Ui_Form
 from mainWindow import MainWindow
-
+from passlib.hash import sha256_crypt
 
 class Login(QWidget):
     def __init__(self):
