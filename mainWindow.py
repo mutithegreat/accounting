@@ -48,6 +48,8 @@ class MainWindow(QMainWindow):
         self.mainPageform.pbHesapEkstre.clicked.connect(self.HesapEkstreEkrani)
         self.mainPageform.pbKayitDuzenle.clicked.connect(self.kayitDuzenle)
         self.alisFaturasıEkran.data_updated.connect(self.guncelle)
+        self.satisFatuasıEkran.data_updated.connect(self.guncelle)
+        self.cekGirisEkran.data_updated.connect(self.guncelle)
         self.odemeler_ekrani()
         self.cek_ekrani()
     def cariPencere(self):
@@ -178,6 +180,7 @@ class MainWindow(QMainWindow):
             self.con.close()
     def guncelle(self):
         self.odemeler_ekrani()
+        self.cek_ekrani()
         
         
         

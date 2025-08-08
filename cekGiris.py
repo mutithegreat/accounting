@@ -1,9 +1,10 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QDate
+from PyQt5.QtCore import QDate,pyqtSignal
 from cekGirisUi import Ui_widget
 import sqlite3
 
 class CekGiris(QWidget):
+    data_updated = pyqtSignal()
     def __init__(self):
         super().__init__()
         self.cekGirisi = Ui_widget()
@@ -36,9 +37,9 @@ class CekGiris(QWidget):
         ct = (yearCek,monthCek,dayCek)
         CekTarihi = "-".join(ct)
 
-        day = str(self.cekGirisi.deCekTarihi.date().day())
-        month = str(self.cekGirisi.deCekTarihi.date().month())
-        year = str(self.cekGirisi.deCekTarihi.date().year())
+        day = str(self.cekGirisi.deCekVadesi.date().day())
+        month = str(self.cekGirisi.deCekVadesi.date().month())
+        year = str(self.cekGirisi.deCekVadesi.date().year())
         if len(month) == 1:
             month = "0"+ month
         if len(day) == 1:
@@ -51,7 +52,7 @@ class CekGiris(QWidget):
         tutar = float(self.cekGirisi.lineEdit.text().replace(",","."))
         self.con = sqlite3.connect("database.db")
         self.cursor = self.con.cursor()
-        self.cursor.execute("insert into cek(cekNo,cekTarihi,FirmaAdi,Aciklama,vadeTarihi,tutar,durum) values(?,?,?,?,?,?,?)",(cekNumarasi,CekTarihi,firmaAdi,aciklama,vadeTarihi,tutar,durum))
+        self.cursor.execute("insert into cek(cek_no,tarih,cari,aciklama,vade_tarihi,toplam,durum) values(?,?,?,?,?,?,?)",(cekNumarasi,CekTarihi,firmaAdi,aciklama,vadeTarihi,tutar,durum))
         self.con.commit()
         self.con.close()
         self.cekGirisi.cbFirmaAdi.setCurrentIndex(-1)
@@ -60,6 +61,7 @@ class CekGiris(QWidget):
         self.cekGirisi.lineEdit.clear()
         self.cekGirisi.textEdit.clear()
         self.cekGirisi.lineEdit_2.clear()
+        self.data_updated.emit()
         self.close()
         
 
