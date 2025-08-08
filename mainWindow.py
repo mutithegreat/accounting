@@ -26,7 +26,6 @@ class MainWindow(QMainWindow):
         self.yapilanOdemeGirisEkran = YapilanOdemeGiris()
         self.hesapEkstreEkran = HesapEkstre()
         self.kayitDuzenleEkran = KayitDuzenle()
-        self.alisFaturasıEkran.data_updated.connect(self.update_data)
         
         self.mainPageform.twCekListesi.setColumnWidth(0,210)
         self.mainPageform.twCekListesi.setColumnWidth(1,80)
@@ -37,75 +36,6 @@ class MainWindow(QMainWindow):
         self.mainPageform.twOdemeListesi.setColumnWidth(1,130)
         self.mainPageform.twGelecekOdeme.setColumnWidth(0,290)
         self.mainPageform.twGelecekOdeme.setColumnWidth(1,130)
-        self.con = sqlite3.connect("database.db")
-        self.cursor = self.con.cursor()
-        self.cursor.execute("""WITH main_table AS(
-                            SELECT
-                                d.cari,
-                            SUM(
-                                CASE WHEN d.ft_tip = "af" AND o.odeme_tip = "go" THEN d.toplam+o.toplam ELSE 0 END
-                            ) AS Yapılacak_Odeme,
-                            SUM(
-                                CASE WHEN d.ft_tip = "sf" AND o.odeme_tip = "yo" THEN o.toplam+d.toplam ELSE 0 END
-                            ) AS Gelecek_Odeme
-                            FROM
-                            data AS d
-                            JOIN 
-                                odeme AS o
-                            ON d.cari = o.cari
-                            GROUP BY d.cari
-                            ) 
-                            SELECT 
-                                cari,
-                                SUM(
-                                CASE WHEN Yapılacak_Odeme > Gelecek_Odeme THEN Yapılacak_Odeme - Gelecek_Odeme ELSE 0 END
-                            ) AS Yapılacak_Odeme,
-                            SUM(
-                                CASE WHEN Yapılacak_Odeme < Gelecek_Odeme THEN Gelecek_Odeme - Yapılacak_Odeme ELSE 0 END
-                            ) AS Gelecek_Odeme
-                                    
-                            FROM 
-                                main_table
-                            GROUP BY cari""")
-        
-        data = self.cursor.fetchall()
-        yapilacak_odemeler = dict()
-        gelecek_odemeler = dict()
-        for cari in data:
-            if cari[1]:
-                yapilacak_odemeler[cari[0]] = cari[1]
-            else:
-                gelecek_odemeler[cari[0]] = cari[2]
-        
-        self.mainPageform.twOdemeListesi.setRowCount(len(yapilacak_odemeler))
-        
-        for col , (key , value) in enumerate(yapilacak_odemeler.items()):
-            if isinstance(value,float):
-                value = "%.2f"  % value
-            self.mainPageform.twOdemeListesi.setItem(col,0,QTableWidgetItem(key))
-            self.mainPageform.twOdemeListesi.setItem(col,1,QTableWidgetItem(value))
-    
-        self.mainPageform.twGelecekOdeme.setRowCount(len(gelecek_odemeler))
-        
-        for col , (key , value) in enumerate(gelecek_odemeler.items()):
-            if isinstance(value,float):
-                value = "%.2f"  % value
-            self.mainPageform.twGelecekOdeme.setItem(col,0,QTableWidgetItem(key))
-            self.mainPageform.twGelecekOdeme.setItem(col,1,QTableWidgetItem(value))
-
-        self.cursor.execute("SELECT cari,cek_no,tarih,vade_tarihi,toplam FROM cek where durum = 1")
-        veri = self.cursor.fetchall()
-        #Yapılan çek ödemeler listesini oluştur
-        self.cursor.execute('select cari,sum(toplam) from cek where durum = "0"group by cari')
-        yapilanCekOdemesiVeri = self.cursor.fetchall()
-        self.con.close()
-        #Çek ekranı verileri
-        self.mainPageform.twCekListesi.setRowCount(len(veri))
-        for row , cek in enumerate(veri):
-            for col, _ in enumerate(cek):
-                if isinstance(_ , float):
-                    _ = "{:,}".format(_)
-                self.mainPageform.twCekListesi.setItem(row,col,QTableWidgetItem(str(_)))
         
         self.mainPageform.pbCariListesi.clicked.connect(self.cariPencere)
         self.mainPageform.pbCariListesi_2.clicked.connect(self.firmalar)
@@ -117,6 +47,9 @@ class MainWindow(QMainWindow):
         self.mainPageform.pbYapilanOdeme.clicked.connect(self.YapilanOdemeEkrani)
         self.mainPageform.pbHesapEkstre.clicked.connect(self.HesapEkstreEkrani)
         self.mainPageform.pbKayitDuzenle.clicked.connect(self.kayitDuzenle)
+        self.alisFaturasıEkran.data_updated.connect(self.guncelle)
+        self.odemeler_ekrani()
+        self.cek_ekrani()
     def cariPencere(self):
         self.carliListesiEkran.show()
     def firmalar(self):
@@ -135,6 +68,94 @@ class MainWindow(QMainWindow):
         self.hesapEkstreEkran.show()
     def kayitDuzenle(self):
         self.kayitDuzenleEkran.show()
+        
+    def veri_al(self):
+        self.con = sqlite3.connect("database.db")
+        self.cursor = self.con.cursor()
+        self.cursor.execute("""WITH fatura AS(
+                                SELECT
+                                    cari,
+                                SUM(
+                                    CASE WHEN ft_tip = "af" THEN toplam ELSE 0 END
+                                ) AS Alis_fatura,
+                                SUM(
+                                    CASE WHEN ft_tip = "sf" THEN toplam ELSE 0 END
+                                ) AS Satis_fatura
+                                FROM
+                                    data 
+                                GROUP BY cari
+                                )
+                                ,
+                                borc AS(
+                                SELECT
+                                    cari,
+                                SUM(
+                                    CASE WHEN odeme_tip = "yo" THEN toplam ELSE 0 END
+                                ) AS Yapilan_odeme,
+                                SUM(
+                                    CASE WHEN odeme_tip = "go" THEN toplam ELSE 0 END
+                                ) AS Gelen_odeme
+                                FROM
+                                    odeme 
+                                GROUP BY cari
+                                )
+
+                            SELECT 
+                                fatura.cari,
+                                fatura.Alis_fatura+borc.Gelen_odeme AS total_borc,
+                                fatura.Satis_fatura+borc.Yapilan_odeme AS total_alacak 
+                            FROM 
+                                fatura 
+                            JOIN 
+                                borc 
+                            ON
+                                borc.cari = fatura.cari""")
+        
+        data = self.cursor.fetchall()
+        self.con.close()
+        yapilacak_odemeler = dict()
+        gelecek_odemeler = dict()
+        for cari in data:
+            if cari[1] > cari[2]:
+                yapilacak_odemeler[cari[0]] = cari[1] - cari[2]
+            else:
+                gelecek_odemeler[cari[0]] = cari[2] - cari[1]
+        return yapilacak_odemeler , gelecek_odemeler
+    
+    def odemeler_ekrani(self):
+        y , g = self.veri_al()
+        self.mainPageform.twOdemeListesi.setRowCount(len(y))
+        
+        for col , (key , value) in enumerate(y.items()):
+            if isinstance(value,float):
+                value = "%.2f"  % value
+            self.mainPageform.twOdemeListesi.setItem(col,0,QTableWidgetItem(key))
+            self.mainPageform.twOdemeListesi.setItem(col,1,QTableWidgetItem(value))
+    
+        self.mainPageform.twGelecekOdeme.setRowCount(len(g))
+        
+        for col , (key , value) in enumerate(g.items()):
+            if isinstance(value,float):
+                value = "%.2f"  % value
+            self.mainPageform.twGelecekOdeme.setItem(col,0,QTableWidgetItem(key))
+            self.mainPageform.twGelecekOdeme.setItem(col,1,QTableWidgetItem(value))
+        #yapilacak_odemeler , gelecek_odemeler = 0 , 0    
+    def cek_ekrani(self):
+        self.con = sqlite3.connect("database.db")
+        self.cursor = self.con.cursor()
+        self.cursor.execute("SELECT cari,cek_no,tarih,vade_tarihi,toplam FROM cek where durum = 1")
+        veri = self.cursor.fetchall()
+                
+        #Çek ekranı verileri
+        self.mainPageform.twCekListesi.setRowCount(len(veri))
+        for row , cek in enumerate(veri):
+            for col, _ in enumerate(cek):
+                if isinstance(_ , float):
+                    _ = "{:,}".format(_)
+                self.mainPageform.twCekListesi.setItem(row,col,QTableWidgetItem(str(_)))
+        self.con.close()
+
+    
     def cekSil(self):
         row = self.mainPageform.twCekListesi.currentRow()
         cekNumarasi = self.mainPageform.twCekListesi.item(row,1).text()
@@ -155,12 +176,8 @@ class MainWindow(QMainWindow):
             self.cursor.execute("update cek set durum = ? where cek_no = ?",("0",cekNumarasi))
             self.con.commit()
             self.con.close()
-    def update_data(self):
-        self.mainPageform.twCekListesi.update()
-        self.mainPageform.twGelecekOdeme.update()
-        self.mainPageform.twOdemeListesi.update()
-            
+    def guncelle(self):
+        self.odemeler_ekrani()
         
-          
-            
-            
+        
+        

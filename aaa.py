@@ -41,12 +41,12 @@ for _ in range(20):
     
     cursor.execute("insert into odeme(odeme_tarihi,cari,aciklama,toplam,odeme_tip) values(?,?,?,?,?)",(odemeTarihi,firmaAdi,aciklama,tutar,durum))
     con.commit()
-"""for ind , cari in enumerate(cari_list):
+for ind , cari in enumerate(cari_list):
     adres = random.choice(aciklama_list)
     vergi_dairesi = random.choice(aciklama_list)
     vergi_no = random.randrange(1,100)
     telefon = random.randrange(1,100)
     mail_adresi = random.randrange(1,100)
-    cursor.execute("Insert into cari_kart values(?,?,?,?,?,?,?)",(ind+1,cari,adres,vergi_dairesi,vergi_no,telefon,mail_adresi))
-    con.commit()"""
+    cursor.execute("Insert into cari_kart(cari , adres ,vergi_dairesi , vergi_no , telefon , mail_adresi) values(?,?,?,?,?,?)",(cari,adres,vergi_dairesi,vergi_no,telefon,mail_adresi))
+    con.commit()
 con.close()

@@ -2,13 +2,22 @@ from PyQt5.QtWidgets import *
 from firmaListesiUi import Ui_Form
 from cariListesi import CariListesi
 import sqlite3
+from PyQt5.QtCore import pyqtSignal
 
 class FirmaListesi(QWidget):
+    
     def __init__(self):
         super().__init__()
         self.firmaListesi = Ui_Form()
         self.firmaListesi.setupUi(self)
         self.cariListesi = CariListesi()
+        firma_listesi = self.cari_listesi()
+        self.firmaListesi.listWidget.addItems(firma_listesi)
+        self.firmaListesi.pbFirmaDuzenle.clicked.connect(self.firma_duzenle)
+        self.firmaListesi.pbFirmaSil.clicked.connect(self.firma_sil)
+        
+    
+    def cari_listesi(self):
         self.con = sqlite3.connect("database.db")
         self.cursor = self.con.cursor()
         self.cursor.execute("SELECT cari FROM cari_kart")
@@ -16,9 +25,8 @@ class FirmaListesi(QWidget):
         firma_listesi = list()
         for i in firmalar:
             firma_listesi.append(i[0])
-        self.firmaListesi.listWidget.addItems(firma_listesi)
-        self.firmaListesi.pbFirmaDuzenle.clicked.connect(self.firma_duzenle)
-        self.firmaListesi.pbFirmaSil.clicked.connect(self.firma_sil)
+        return firma_listesi
+        
 
     def firma_sil(self):
         self.con = sqlite3.connect("database.db")
@@ -53,13 +61,14 @@ class FirmaListesi(QWidget):
         self.cariListesi.show()
         self.cursor.execute("SELECT * FROM cari_kart where cari = ?" , (firmaAdi,))
         data = self.cursor.fetchall()
-        self.cariListesi.cariListesi.lineEdit.setText(data[0][0])
-        self.cariListesi.cariListesi.textEdit.setText(data[0][1])
-        self.cariListesi.cariListesi.lineEdit_2.setText(data[0][2])
-        self.cariListesi.cariListesi.lineEdit_3.setText(str(data[0][3]))
-        self.cariListesi.cariListesi.lineEdit_4.setText(str(data[0][4]))
-        self.cariListesi.cariListesi.lineEdit_5.setText(str(data[0][5]))
-        
+        self.cariListesi.cariListesi.lineEdit.setText(data[0][1])
+        self.cariListesi.cariListesi.textEdit.setText(data[0][2])
+        self.cariListesi.cariListesi.lineEdit_2.setText(data[0][3])
+        self.cariListesi.cariListesi.lineEdit_3.setText(str(data[0][4]))
+        self.cariListesi.cariListesi.lineEdit_4.setText(str(data[0][5]))
+        self.cariListesi.cariListesi.lineEdit_5.setText(str(data[0][6]))
         self.cursor.execute("delete from cari_kart where cari = ?",(firmaAdi,))
         self.con.commit()
+        
+    
     
