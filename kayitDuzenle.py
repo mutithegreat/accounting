@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QDate
+from PyQt5.QtCore import QDate,pyqtSignal
 from kayitDuzenleUi import Ui_kayitDuzenle
 from alisFaturasi import AlisFaturasi
 from satisFaturasi import SatisFaturasi
@@ -8,6 +8,7 @@ from yapilanOdemeGiris import YapilanOdemeGiris
 import sqlite3
 
 class KayitDuzenle(QWidget):
+    data_updated = pyqtSignal()
     def __init__(self):
         super().__init__()
         self.kayitDuzenle = Ui_kayitDuzenle()
@@ -36,9 +37,9 @@ class KayitDuzenle(QWidget):
     def kayitGoster(self):
         firmaAdi = self.kayitDuzenle.cbFirmaAdi.currentText()
         data = list()
-        self.cursor.execute("select id,odemeTip,odemeTarih,tutar,Aciklama from odeme where firmaAdi = ?" , (firmaAdi,))
+        self.cursor.execute("select id,odeme_tip,odeme_tarihi,toplam,aciklama from odeme where cari = ?" , (firmaAdi,))
         dataOdeme = self.cursor.fetchall()
-        self.cursor.execute("select id,ftTip,ftTarih,ftToplam,ftAciklama from data where ftCariAdi = ?" , (firmaAdi,))
+        self.cursor.execute("select id,ft_tip,tarih,toplam,aciklama from data where cari = ?" , (firmaAdi,))
         dataFatura = self.cursor.fetchall()
         for i in dataOdeme:
             data.append(i)
@@ -63,7 +64,7 @@ class KayitDuzenle(QWidget):
         islemBicimi = self.kayitDuzenle.twAyrintilar.item(row,1).text()
         
         if islemBicimi == "Satış Faturası":
-            self.cursor.execute("select ftTarih,ftNo,ftCariAdi,ftAciklama,ftTutar,ftKdv,ftToplam from data where id = ?" , (id,))
+            self.cursor.execute("select tarih,ft_no,cari,aciklama,toplam,kdv,toplam from data where id = ?" , (id,))
             veri = self.cursor.fetchall()
             self.satisFaturasi.show()
             year = int(veri[0][0][0:4])
@@ -78,10 +79,11 @@ class KayitDuzenle(QWidget):
             self.satisFaturasi.satisFatura.lineEditFaturaNo_4.setText(str(veri[0][6]))
             self.cursor.execute("delete from data where id = ?" , (id,))
             self.con.commit()
+            self.data_updated.emit()
             
             
         elif islemBicimi == "Alış Faturası":
-            self.cursor.execute("select ftTarih,ftNo,ftCariAdi,ftAciklama,ftTutar,ftKdv,ftToplam from data where id = ?" , (id,))
+            self.cursor.execute("select tarih,ft_no,cari,aciklama,toplam,kdv,toplam from data where id = ?" , (id,))
             veri = self.cursor.fetchall()
             self.alisFaturasi.show()
             year = int(veri[0][0][0:4])
@@ -96,11 +98,12 @@ class KayitDuzenle(QWidget):
             self.alisFaturasi.alisFatura.lineEditFaturaNo_4.setText(str(veri[0][6]))
             self.cursor.execute("delete from data where id = ?" , (id,))
             self.con.commit()
+            self.data_updated.emit()
             
             
         elif islemBicimi == "Gelen Ödeme":
             self.odemeGiris.show()
-            self.cursor.execute("select odemeTarih ,FirmaAdi,Aciklama,tutar,odemeTip from odeme where id = ?" , (id,))
+            self.cursor.execute("select odeme_tarihi ,aciklama,toplam,odeme_tip from odeme where id = ?" , (id,))
             veri = self.cursor.fetchall()
             year = int(veri[0][0][0:4])
             month = int(veri[0][0][5:7])
@@ -111,10 +114,11 @@ class KayitDuzenle(QWidget):
             self.odemeGiris.odemeGirisi.textEdit.setText(veri[0][2])
             self.cursor.execute("delete from odeme where id = ?" , (id,))
             self.con.commit()
+            self.data_updated.emit()
             
         else:
             self.yapilanOdemeGiris.show()
-            self.cursor.execute("select odemeTarih ,FirmaAdi,Aciklama,tutar,odemeTip from odeme where id = ?" , (id,))
+            self.cursor.execute("select odeme_tarihi ,aciklama,toplam,odeme_tip from odeme where id = ?" , (id,))
             veri = self.cursor.fetchall()
             year = int(veri[0][0][0:4])
             month = int(veri[0][0][5:7])
@@ -125,6 +129,7 @@ class KayitDuzenle(QWidget):
             self.yapilanOdemeGiris.YapilanOdemeGirisi.textEdit.setText(veri[0][2])
             self.cursor.execute("delete from odeme where id = ?" , (id,))
             self.con.commit()
+            self.data_updated.emit()
         
         
         
@@ -149,11 +154,13 @@ class KayitDuzenle(QWidget):
                 self.cursor = self.con.cursor()
                 self.cursor.execute("delete from data where id = ?" , (id,))
                 self.con.commit()
+                self.data_updated.emit()
                 
             else:
                 self.con = sqlite3.connect("database.db")
                 self.cursor = self.con.cursor()
                 self.cursor.execute("delete from odeme where id = ?" , (id,))
                 self.con.commit()
+                self.data_updated.emit()
         
         

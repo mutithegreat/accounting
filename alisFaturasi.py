@@ -2,6 +2,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QDate,pyqtSignal,QObject
 from alisFaturaUi import Ui_Form
 import sqlite3
+from cariListesi import CariListesi
+import parametre
 
 class AlisFaturasi(QWidget , QObject):
     data_updated = pyqtSignal()
@@ -9,13 +11,8 @@ class AlisFaturasi(QWidget , QObject):
         super().__init__()
         self.alisFatura = Ui_Form()
         self.alisFatura.setupUi(self)
-        self.con = sqlite3.connect("database.db")
-        self.cursor = self.con.cursor()
-        self.cursor.execute("SELECT cari FROM cari_kart")
-        firmalar = self.cursor.fetchall()
-        firma_listesi = [i[0] for i in firmalar]
-        self.con.close()
-        
+        self.CariListesiEkran = CariListesi()
+        firma_listesi = parametre.parametre_cari()
         self.alisFatura.comboBox.addItems(sorted(firma_listesi))
         self.alisFatura.pushButton_2.clicked.connect(self.hesapla)
         self.alisFatura.pushButton.clicked.connect(self.kaydet)
@@ -67,11 +64,7 @@ class AlisFaturasi(QWidget , QObject):
         self.alisFatura.textEdit.clear()
         self.data_updated.emit()
         self.close()
-
-        
-        
-        
-        
+    
         
         
         

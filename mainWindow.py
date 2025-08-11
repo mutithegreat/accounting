@@ -50,6 +50,7 @@ class MainWindow(QMainWindow):
         self.alisFaturasıEkran.data_updated.connect(self.guncelle)
         self.satisFatuasıEkran.data_updated.connect(self.guncelle)
         self.cekGirisEkran.data_updated.connect(self.guncelle)
+        self.kayitDuzenleEkran.data_updated.connect(self.guncelle)
         self.odemeler_ekrani()
         self.cek_ekrani()
     def cariPencere(self):

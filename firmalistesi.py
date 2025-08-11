@@ -16,6 +16,7 @@ class FirmaListesi(QWidget):
         self.firmaListesi.pbFirmaDuzenle.clicked.connect(self.firma_duzenle)
         self.firmaListesi.pbFirmaSil.clicked.connect(self.firma_sil)
         
+        
     
     def cari_listesi(self):
         self.con = sqlite3.connect("database.db")

@@ -5,7 +5,7 @@ from PyQt5.QtCore import pyqtSignal
 
 
 class CariListesi(QWidget):
-    data_updated = pyqtSignal()
+    data_update = pyqtSignal()
     def __init__(self):
         super().__init__()
         self.cariListesi = Ui_Form()
@@ -30,7 +30,7 @@ class CariListesi(QWidget):
         self.cariListesi.lineEdit_4.clear()
         self.cariListesi.lineEdit_5.clear()
         self.cariListesi.textEdit.clear()
-        self.data_updated.emit()
+        self.data_update.emit()
         self.close()
         
         
